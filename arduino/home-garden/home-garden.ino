@@ -26,7 +26,7 @@ const int intervals = (AirValue - WaterValue) / 3;
 const char* moistureLevels[] = {"Too wet", "Very wet", "Wet", "Dry", "Too dry"};
 
 unsigned long previousMillis = 0;
-const unsigned long sampleInterval = 180000;
+const unsigned long sampleInterval = 500;
 
 StaticJsonDocument<128> doc;
 JsonObject sensors = doc.createNestedObject("sensors");
