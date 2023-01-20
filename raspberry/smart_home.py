@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 import mariadb
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 def connect_to_db():
     try:
@@ -98,6 +101,7 @@ def process_device():
     return jsonify(message='Data processed successfully'), 200
 
 
+@cross_origin
 @app.route('/get_data/<id>', methods=['GET'])
 def get_data(id):
     conn, err = connect_to_db()
@@ -105,14 +109,15 @@ def get_data(id):
         return jsonify(error=err), 500
     cur = conn.cursor()
     
-    cur.execute("SELECT s.name, m.value, m.time, (SELECT st.name FROM sensor_type st WHERE st.id = s.type) FROM measurement m INNER JOIN sensor s ON m.sensor = s.id");
+    cur.execute("SELECT s.name, m.value, m.time, (SELECT st.name FROM sensor_type st WHERE st.id = s.type) FROM measurement m INNER JOIN sensor s ON m.sensor = s.id WHERE m.time = (SELECT max(m2.time) FROM measurement m2 WHERE m2.sensor = m.sensor)");
     measurements = []
     
     for sensor, value, time, s_type in cur:
         measurements.append({"sensor": sensor, "value": value, "time": time, "type": s_type})
     
-    return jsonify(measurements), 200
+    return jsonify(results=measurements), 200
 
+@cross_origin
 @app.route('/', methods=['GET'])
 def home():
     conn, err = connect_to_db()
@@ -126,19 +131,7 @@ def home():
     for id, device, d_type in cur:
         devices.append({"id": id, "device": device, "type": d_type})
         
-    return jsonify(devices), 200
+    return jsonify(devices=devices), 200
 
 if __name__ == 'main':
-    try:
-        conn = mariadb.connect(
-            user="wojciech",
-            password="1234",
-            host="localhost",
-            port=3306,
-            database="smart_home"
-        )
-        app.run(host='0.0.0.0', port=8000)
-    except mariadb.Error as e:
-        pass
-    finally:
-        conn.close()
+    app.run(host='0.0.0.0', port=8000)
