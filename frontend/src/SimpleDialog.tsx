@@ -22,7 +22,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
     const [data, setData] = React.useState<any[]>([]);
 
     const fetchData = () => {
-        fetch('http://0.0.0.0:5000/get_data/' + id)
+        fetch('http://127.0.0.1:5000/get_data/' + id)
             .then((response) => response.json())
             .then((actualData) => {
                 console.log(actualData);

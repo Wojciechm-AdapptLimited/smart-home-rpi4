@@ -71,7 +71,7 @@ function DashboardContent() {
   const [data, setData] = React.useState<any[]>([]);
 
   const fetchData = () => {
-    fetch('http://0.0.0.0:5000/')
+    fetch('http://127.0.0.1:5000/')
       .then((response) => response.json())
       .then((actualData) => {
         console.log(actualData);
