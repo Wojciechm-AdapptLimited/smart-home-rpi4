@@ -26,12 +26,12 @@ void setup() {
   
 
   doc["device"] = WiFi.macAddress();
-  doc["type"] = "home-garden";
-  sensors["DHT_22_TEMP"] = "temperature";
-  sensors["DHT_22_HUM"] = "humidity";
-  sensors["SOIL_1"] = "moisture";
-  sensors["SOIL_2"] = "moisture";
-  sensors["SOIL_3"] = "moisture";
+  doc["type"] = "Home Garden";
+  sensors["DHT_22_TEMP"] = "Temperature";
+  sensors["DHT_22_HUM"] = "Humidity";
+  sensors["SOIL_1"] = "Soil Moisture";
+  sensors["SOIL_2"] = "Soil Moisture";
+  sensors["SOIL_3"] = "Soil Moisture";
 
   while (!http.begin(client, hostDevice)) {  // HTTP
     delay(10000);
@@ -64,5 +64,5 @@ void loop() {
     http.end();
   }
 
-  delay(10000);
+  delay(1200000);
 }
